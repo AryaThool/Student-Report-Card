@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Report Card System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #3c4d6f;
+            color: #333;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1, h2, h3 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .login-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 30px;
+        }
+        
+        .role-toggle {
+            display: flex;
+            margin-bottom: 30px;
+            overflow: hidden;
+            border-radius: 5px;
+            border: 1px solid #fd7e14;
+        }
+        
+        .role-toggle label {
+            padding: 10px 30px;
+            background-color: #f8f9fa;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .role-toggle label:first-of-type {
+            border-right: 1px solid #fd7e14;
+        }
+        
+        .role-toggle input[type="radio"] {
+            display: none;
+        }
+        
+        .role-toggle input[type="radio"]:checked + label {
+            background-color: #fd7e14;
+            color: white;
+        }
+        
+        .login-form {
+            width: 100%;
+            max-width: 400px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        
+        button {
+            background-color: #fd7e14;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            display: block;
+            width: 100%;
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+        }
+        
+        .dashboard {
+            padding: 20px;
+        }
+        
+        .welcome-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .logout-btn {
+            background-color: #e74c3c;
+            padding: 8px 15px;
+            width: auto;
+        }
+        
+        .logout-btn:hover {
+            background-color: #c0392b;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+        
+        .subjects-list {
+            margin: 20px 0;
+            border: 1px solid #eee;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        table th, table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        table th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+        }
+        
+        .result-code {
+            text-align: center;
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f1f8ff;
+            border-radius: 5px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+        
+        .result-display {
+            margin-top: 30px;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .delete-btn {
+            background-color: #e74c3c;
+            padding: 5px 10px;
+            width: auto;
+        }
+
+        .notice {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .test-accounts {
+            background-color: #e2f3ff;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        .test-accounts ul {
+            list-style-type: none;
+            display: inline-block;
+            text-align: left;
+            margin: 0 auto;
+        }
+        
+        .test-accounts li {
+            margin-bottom: 5px;
+        }
+        .logo{
+            width: 100px;
+            height: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Login Page -->
+        <div id="login-page" class="login-container">
+            <img src="/JDCOEM-Logo.png" alt="JDCOEM" class="logo">
+            <h1>Student Report Card System</h1>
+            
+            <!-- <div class="test-accounts">
+                <strong>Test Accounts:</strong>
+                <ul>
+                    <li>Teacher: username - "teacher1", password - "pass123"</li>
+                    <li>Student: username - "student1", password - "pass123"</li>
+                </ul>
+            </div> -->
+            
+            <div class="role-toggle">
+                <input type="radio" id="student-role" name="role" value="student" checked>
+                <label for="student-role">Student</label>
+                <input type="radio" id="teacher-role" name="role" value="teacher">
+                <label for="teacher-role">Teacher</label>
+            </div>
+            
+            <div class="login-form">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" placeholder="Enter your username">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="Enter your password">
+                </div>
+                <button id="login-btn">Login</button>
+            </div>
+        </div>
+        
+        <!-- Teacher Dashboard -->
+        <div id="teacher-dashboard" class="dashboard hidden">
+            <div class="welcome-header">
+                <h2>Teacher Dashboard</h2>
+                <button class="logout-btn" id="teacher-logout">Logout</button>
+            </div>
+            
+            <div class="card">
+                <h3>Add Student Result</h3>
+                <div class="form-group">
+                    <label for="student-name">Student Name</label>
+                    <input type="text" id="student-name" placeholder="Enter student name">
+                </div>
+                <div class="form-group">
+                    <label for="student-roll">Roll Number</label>
+                    <input type="text" id="student-roll" placeholder="Enter roll number">
+                </div>
+                <div class="form-group">
+                    <label for="student-class">Class</label>
+                    <input type="text" id="student-class" placeholder="Enter class">
+                </div>
+                
+                <h4 style="margin-top: 20px;">Add Subjects</h4>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="subject-name">Subject Name</label>
+                        <input type="text" id="subject-name" placeholder="Enter subject name">
+                    </div>
+                    <div class="form-group">
+                        <label for="subject-marks">Marks (out of 100)</label>
+                        <input type="number" id="subject-marks" placeholder="Enter marks" min="0" max="100">
+                    </div>
+                    <div style="align-self: flex-end;">
+                        <button id="add-subject-btn">Add Subject</button>
+                    </div>
+                </div>
+                
+                <div class="subjects-list">
+                    <table id="subjects-table">
+                        <thead>
+                            <tr>
+                                <th>Subject</th>
+                                <th>Marks</th>
+                                <th>Percentage</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="subjects-body"></tbody>
+                        <tfoot id="subjects-foot" class="hidden">
+                            <tr>
+                                <td colspan="2" style="text-align: right;"><strong>Average Percentage:</strong></td>
+                                <td id="average-percentage"></td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                
+                <button id="generate-result-btn" style="margin-top: 20px;">Generate Result Code</button>
+                
+                <div id="result-code-container" class="result-code hidden">
+                    Result Code: <span id="result-code"></span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Student Dashboard -->
+        <div id="student-dashboard" class="dashboard hidden">
+            <div class="welcome-header">
+                <h2>Student Dashboard</h2>
+                <button class="logout-btn" id="student-logout">Logout</button>
+            </div>
+            
+            <div class="card">
+                <h3>View Your Result</h3>
+                <div class="form-group">
+                    <label for="result-code-input">Enter Result Code</label>
+                    <input type="text" id="result-code-input" placeholder="Enter the result code provided by your teacher">
+                </div>
+                <button id="view-result-btn">View Result</button>
+                
+                <div id="result-display" class="result-display hidden">
+                    <div id="student-info"></div>
+                    <table id="result-table">
+                        <thead>
+                            <tr>
+                                <th>Subject</th>
+                                <th>Marks</th>
+                                <th>Percentage</th>
+                            </tr>
+                        </thead>
+                        <tbody id="result-body"></tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="2" style="text-align: right;"><strong>Average Percentage:</strong></td>
+                                <td id="result-average"></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Store users (in a real application, this would come from a backend)
+        const users = {
+            teachers: [
+                { username: "teacher1", password: "pass123" },
+                { username: "teacher2", password: "pass456" }
+            ],
+            students: [
+                { username: "student1", password: "pass123" },
+                { username: "student2", password: "pass456" }
+            ]
+        };
+        
+        // Store for results (in a real application, this would be in a database)
+        const resultsStore = {};
+        
+        // DOM Elements
+        const loginPage = document.getElementById('login-page');
+        const teacherDashboard = document.getElementById('teacher-dashboard');
+        const studentDashboard = document.getElementById('student-dashboard');
+        const loginBtn = document.getElementById('login-btn');
+        const teacherLogoutBtn = document.getElementById('teacher-logout');
+        const studentLogoutBtn = document.getElementById('student-logout');
+        
+        // Teacher Dashboard Elements
+        const addSubjectBtn = document.getElementById('add-subject-btn');
+        const subjectsTable = document.getElementById('subjects-table');
+        const subjectsBody = document.getElementById('subjects-body');
+        const subjectsFoot = document.getElementById('subjects-foot');
+        const averagePercentage = document.getElementById('average-percentage');
+        const generateResultBtn = document.getElementById('generate-result-btn');
+        const resultCodeContainer = document.getElementById('result-code-container');
+        const resultCodeDisplay = document.getElementById('result-code');
+        
+        // Student Dashboard Elements
+        const viewResultBtn = document.getElementById('view-result-btn');
+        const resultDisplay = document.getElementById('result-display');
+        const studentInfo = document.getElementById('student-info');
+        const resultBody = document.getElementById('result-body');
+        const resultAverage = document.getElementById('result-average');
+        
+        // Login functionality
+        loginBtn.addEventListener('click', () => {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const role = document.querySelector('input[name="role"]:checked').value;
+            
+            if (!username || !password) {
+                alert('Please enter both username and password');
+                return;
+            }
+            
+            let authenticated = false;
+            
+            if (role === 'teacher') {
+                authenticated = users.teachers.some(user => 
+                    user.username === username && user.password === password);
+                    
+                if (authenticated) {
+                    loginPage.style.display = 'none';
+                    teacherDashboard.classList.remove('hidden');
+                }
+            } else if (role === 'student') {
+                authenticated = users.students.some(user => 
+                    user.username === username && user.password === password);
+                    
+                if (authenticated) {
+                    loginPage.style.display = 'none';
+                    studentDashboard.classList.remove('hidden');
+                }
+            }
+            
+            if (!authenticated) {
+                alert('Invalid username or password');
+            }
+        });
+        
+        // Logout functionality
+        teacherLogoutBtn.addEventListener('click', () => {
+            teacherDashboard.classList.add('hidden');
+            loginPage.style.display = 'flex';
+            clearTeacherForm();
+        });
+        
+        studentLogoutBtn.addEventListener('click', () => {
+            studentDashboard.classList.add('hidden');
+            loginPage.style.display = 'flex';
+            clearStudentForm();
+        });
+        
+        // Teacher functionality - Add Subject
+        let subjects = [];
+        
+        addSubjectBtn.addEventListener('click', () => {
+            const subjectName = document.getElementById('subject-name').value;
+            const subjectMarks = parseFloat(document.getElementById('subject-marks').value);
+            
+            if (!subjectName || isNaN(subjectMarks) || subjectMarks < 0 || subjectMarks > 100) {
+                alert('Please enter valid subject name and marks (0-100)');
+                return;
+            }
+            
+            const percentage = (subjectMarks / 100) * 100;
+            
+            subjects.push({
+                name: subjectName,
+                marks: subjectMarks,
+                percentage: percentage
+            });
+            
+            updateSubjectsTable();
+            calculateAverage();
+            
+            // Clear inputs
+            document.getElementById('subject-name').value = '';
+            document.getElementById('subject-marks').value = '';
+        });
+        
+        function updateSubjectsTable() {
+            subjectsBody.innerHTML = '';
+            
+            subjects.forEach((subject, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${subject.name}</td>
+                    <td>${subject.marks}</td>
+                    <td>${subject.percentage.toFixed(2)}%</td>
+                    <td><button class="delete-btn" data-index="${index}">Delete</button></td>
+                `;
+                subjectsBody.appendChild(row);
+            });
+            
+            // Add event listeners to delete buttons
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const index = parseInt(e.target.getAttribute('data-index'));
+                    subjects.splice(index, 1);
+                    updateSubjectsTable();
+                    calculateAverage();
+                });
+            });
+            
+            if (subjects.length > 0) {
+                subjectsFoot.classList.remove('hidden');
+            } else {
+                subjectsFoot.classList.add('hidden');
+            }
+        }
+        
+        function calculateAverage() {
+            if (subjects.length === 0) {
+                return;
+            }
+            
+            const total = subjects.reduce((sum, subject) => sum + subject.percentage, 0);
+            const avg = total / subjects.length;
+            
+            averagePercentage.textContent = `${avg.toFixed(2)}%`;
+        }
+        
+        // Generate Result Code
+        generateResultBtn.addEventListener('click', () => {
+            const studentName = document.getElementById('student-name').value;
+            const studentRoll = document.getElementById('student-roll').value;
+            const studentClass = document.getElementById('student-class').value;
+            
+            if (!studentName || !studentRoll || !studentClass) {
+                alert('Please enter student details');
+                return;
+            }
+            
+            if (subjects.length === 0) {
+                alert('Please add at least one subject');
+                return;
+            }
+            
+            // Generate a random code
+            const resultCode = 'RC' + Math.random().toString(36).substring(2, 8).toUpperCase();
+            
+            // Store the result data
+            resultsStore[resultCode] = {
+                student: {
+                    name: studentName,
+                    roll: studentRoll,
+                    class: studentClass
+                },
+                subjects: [...subjects],
+                average: parseFloat(averagePercentage.textContent)
+            };
+            
+            // Display the code
+            resultCodeDisplay.textContent = resultCode;
+            resultCodeContainer.classList.remove('hidden');
+        });
+        
+        // Student functionality - View Result
+        viewResultBtn.addEventListener('click', () => {
+            const code = document.getElementById('result-code-input').value.trim();
+            
+            if (!code) {
+                alert('Please enter a result code');
+                return;
+            }
+            
+            const result = resultsStore[code];
+            
+            if (!result) {
+                alert('Invalid result code. Please check with your teacher for the correct code.');
+                return;
+            }
+            
+            // Display student info
+            studentInfo.innerHTML = `
+                <div style="margin-bottom: 20px; background-color: #f8f9fa; padding: 15px; border-radius: 5px;">
+                    <h3 style="margin-bottom: 10px;">Student Information</h3>
+                    <p><strong>Name:</strong> ${result.student.name}</p>
+                    <p><strong>Roll Number:</strong> ${result.student.roll}</p>
+                    <p><strong>Class:</strong> ${result.student.class}</p>
+                </div>
+            `;
+            
+            // Display subjects
+            resultBody.innerHTML = '';
+            result.subjects.forEach(subject => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${subject.name}</td>
+                    <td>${subject.marks}</td>
+                    <td>${subject.percentage.toFixed(2)}%</td>
+                `;
+                resultBody.appendChild(row);
+            });
+            
+            // Display average
+            resultAverage.textContent = `${parseFloat(result.average).toFixed(2)}%`;
+            
+            // Show result display
+            resultDisplay.classList.remove('hidden');
+        });
+        
+        function clearTeacherForm() {
+            document.getElementById('student-name').value = '';
+            document.getElementById('student-roll').value = '';
+            document.getElementById('student-class').value = '';
+            document.getElementById('subject-name').value = '';
+            document.getElementById('subject-marks').value = '';
+            subjects = [];
+            updateSubjectsTable();
+            resultCodeContainer.classList.add('hidden');
+        }
+        
+        function clearStudentForm() {
+            document.getElementById('result-code-input').value = '';
+            resultDisplay.classList.add('hidden');
+        }
+
+        // Add example result code for demo purposes
+        resultsStore['RC123ABC'] = {
+            student: {
+                name: "John Smith",
+                roll: "R123",
+                class: "Grade 10"
+            },
+            subjects: [
+                { name: "Mathematics", marks: 85, percentage: 85 },
+                { name: "Science", marks: 92, percentage: 92 },
+                { name: "English", marks: 78, percentage: 78 }
+            ],
+            average: 85
+        };
+    </script>
+</body>
+</html>
